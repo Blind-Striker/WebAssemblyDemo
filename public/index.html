@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>WASM test</title>
+</head>
+
+<body>
+    <script src="/scripts/wasm-utils.js"></script>
+    <script>
+        // Check for wasm support.
+        if (!('WebAssembly' in window)) {
+            alert('you need a browser with wasm support enabled :(');
+        }
+
+        var imports = {};
+        imports.env = {};
+        imports.env.memoryBase = 0;
+        imports.env.tableBase = 0;
+        imports.env.memory = new WebAssembly.Memory({ initial: 256 });
+        imports.env.table = new WebAssembly.Table({ initial: 0, element: 'anyfunc' });
+
+        var exports = {};
+        fetchAndInstantiate('fibonacci.wasm', imports).then(function (instance) {
+            exports.fib = instance.exports._fib;
+            // var result = exports._fib(5);
+            // console.log(result);
+        });
+        fetchAndInstantiate('factorial.wasm', imports).then(function (instance) {
+            exports.factorial = instance.exports._factorial;
+            // var result = exports._fib(5);
+            // console.log(result);
+        });
+    </script>
+</body>
+</html>
