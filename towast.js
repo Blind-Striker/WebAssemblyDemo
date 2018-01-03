@@ -3,21 +3,21 @@ var fs = require("fs");
 var path = require('path');
 var argv = require('minimist')(process.argv.slice(2));
 
-function getWasmFiles(files){
+function getWasmFiles(files) {
     var wasmFiles = [];
     var thrExp = true;
-    var wasmRoot = __dirname + "/public/";
+    var wasmRoot = __dirname + "/public/wasm/";
 
-    if(files === undefined || files.length === 0) {
-        files = fs.readdirSync(wasmRoot); 
-        thrExp = false;     
+    if (files === undefined || files.length === 0) {
+        files = fs.readdirSync(wasmRoot);
+        thrExp = false;
     }
 
-    for(i=0; i < files.length; i++){
+    for (i = 0; i < files.length; i++) {
         var wasmFile = wasmRoot + files[i];
-        if(path.extname(files[i]).toLowerCase() !== ".wasm" || !fs.existsSync(wasmFile)){
-            if(thrExp === true){
-                throw Error (files[i] + " is not wasm or not found")
+        if (path.extname(files[i]).toLowerCase() !== ".wasm" || !fs.existsSync(wasmFile)) {
+            if (thrExp === true) {
+                throw Error(files[i] + " is not wasm or not found")
             }
             continue;
         }
@@ -27,12 +27,12 @@ function getWasmFiles(files){
     return wasmFiles;
 }
 
-function writeWastFiles(wasmFiles){
-    if(wasmFiles === undefined || wasmFiles.length === 0){
+function writeWastFiles(wasmFiles) {
+    if (wasmFiles === undefined || wasmFiles.length === 0) {
         return;
     }
 
-    for(i=0; i < wasmFiles.length; i++){
+    for (i = 0; i < wasmFiles.length; i++) {
         var wasmFile = wasmFiles[i];
         var result = fs.readFileSync(wasmFile);
 

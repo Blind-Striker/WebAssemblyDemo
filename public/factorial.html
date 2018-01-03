@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="style.css" rel="stylesheet" />
+
+    <script src="/scripts/wasm-utils.js"></script>
+    <script src="/scripts/utils.js"></script>
+    <script src="/scripts/factorial.js"></script>
+
+    <script id="ws_instantiate_code">
+        // Check for wasm support.
+        if (!('WebAssembly' in window)) {
+            alert('you need a browser with wasm support enabled :(');
+        }
+
+        var imports = {};
+        imports.env = {};
+        imports.env.memoryBase = 0;
+        imports.env.tableBase = 0;
+        imports.env.memory = new WebAssembly.Memory({ initial: 256 });
+        imports.env.table = new WebAssembly.Table({ initial: 0, element: 'anyfunc' });
+
+        var exports = {};
+
+        fetchAndInstantiate('wasm/factorial.wasm', imports).then(function (instance) {
+            exports.factorial = instance.exports._factorial;
+            utilsModule.onReady();
+        });
+    </script>
+
+    <script>
+        function start() {
+            document.getElementById('run_button').disabled = true;
+
+            var num = 16;
+            var loop = 10000000;
+
+            utilsModule.compareFunctions(factorial, exports.factorial, loop, num);
+        }
+    </script>
+</head>
+
+<body onload="utilsModule.init('/scripts/factorial.js', '/native/factorial.c', 'wasm/factorial.wast')">
+    <div class="container">
+        <header>
+            <h1>Web Assembly Test</h1>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <a href="factorial.html">Factorial</a>
+                </li>
+                <li>
+                    <a href="fibonacci.html">Fibonacci</a>
+                </li>
+            </ul>
+        </nav>
+        <article>
+            <h1>Factorial Tests</h1>
+            <div>
+                <p>
+                    <button id="run_button" onclick="start()" disabled>run</button>
+                    <span id="message">Loading WebAssembly</span>
+                </p>
+                <p>
+                    Result (average [ms])
+                    <br /> JavaScript:
+                    <span id="js_performance"></span>
+                    <br /> WebAssembly:
+                    <span id="ws_performance"></span>
+                    <br /> JavaScript/WebAssembly:
+                    <span id="comparison"></span>
+                    <br />
+                </p>
+            </div>
+            <div>
+                <p onclick="utilsModule.switchDisplay(this.parentNode)">+ JavaScript code</p>
+                <p>
+                    <textarea id="js_code_area" readonly style="display:none"></textarea>
+                </p>
+            </div>
+            <div>
+                <p onclick="utilsModule.switchDisplay(this.parentNode)">+ WebAssembly C code</p>
+                <p>
+                    <textarea id="ws_code_area" readonly style="display:none"></textarea>
+                </p>
+            </div>
+            <div>
+                <p onclick="utilsModule.switchDisplay(this.parentNode)">+ WebAssembly Wast code</p>
+                <p>
+                    <textarea id="wst_code_area" readonly style="display:none"></textarea>
+                </p>
+            </div>
+            <div>
+                <p onclick="utilsModule.switchDisplay(this.parentNode)">+ WebAssembly Instantiation code</p>
+                <p>
+                    <textarea id="ws_instantiate_code_area" readonly style="display:none"></textarea>
+                </p>
+            </div>
+        </article>
+
+        <footer>Codefiction</footer>
+    </div>
+</body>
+</html>
