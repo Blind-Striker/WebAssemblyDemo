@@ -4,3 +4,6 @@ emcc .\public\native\fibonacci.c  -Os  -s WASM=1  -s MODULARIZE=1 -s DEMANGLE_SU
 emcc .\public\native\factorial.c  -Os  -s WASM=1  -s MODULARIZE=1 -s DEMANGLE_SUPPORT=1 -s "EXPORTED_FUNCTIONS=['_factorial']"  -o .\public\wasm\facto.js
 emcc -Oz .\public\native\fibonacci.c -s WASM=1 -o .\public\wasm\fibonacci.html
 emcc -Oz .\public\native\factorial.c -s WASM=1 -o .\public\wasm\factorial.html
+
+docker build -t webassemblydemo .
+docker run -p 8080:8080 -d webassemblydemo
