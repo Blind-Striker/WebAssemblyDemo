@@ -4,7 +4,10 @@
   "description": "Demo",
   "main": "app.js",
   "scripts": {
-    "prestart": "prestart.bat",
+    "factorialWasm" : "emcc -Oz ./public/native/fibonacci.c -s WASM=1 -s SIDE_MODULE=1 -o ./public/wasm/fibonacci.wasm",
+    "fibonacciWasm" : "emcc -Oz ./public/native/factorial.c -s WASM=1 -s SIDE_MODULE=1 -o ./public/wasm/factorial.wasm",
+    "toWast" : "node towast.js",
+    "prestart": "npm run factorialWasm && npm run fibonacciWasm && npm run toWast",
     "start":"node app.js"
   },
   "author": "",

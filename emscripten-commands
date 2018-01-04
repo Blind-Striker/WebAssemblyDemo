@@ -1,0 +1,6 @@
+emcc -Oz .\public\native\fibonacci.c -s WASM=1 -s SIDE_MODULE=1 -o .\public\wasm\fibonacci.wasm
+emcc -Oz .\public\native\factorial.c -s WASM=1 -s SIDE_MODULE=1 -o .\public\wasm\factorial.wasm
+emcc .\public\native\fibonacci.c  -Os  -s WASM=1  -s MODULARIZE=1 -s DEMANGLE_SUPPORT=1 -s "EXPORTED_FUNCTIONS=['_fib']"  -o .\public\wasm\fib.js
+emcc .\public\native\factorial.c  -Os  -s WASM=1  -s MODULARIZE=1 -s DEMANGLE_SUPPORT=1 -s "EXPORTED_FUNCTIONS=['_factorial']"  -o .\public\wasm\facto.js
+emcc -Oz .\public\native\fibonacci.c -s WASM=1 -o .\public\wasm\fibonacci.html
+emcc -Oz .\public\native\factorial.c -s WASM=1 -o .\public\wasm\factorial.html
